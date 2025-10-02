@@ -35,6 +35,10 @@ public class PilaGenerica<T> {
     return arreglo;
   }
 
+  public boolean isEmpty() {
+    return top == 0;
+  }
+
   public int getTop() {
     return top;
   }

@@ -1,5 +1,7 @@
 package ui;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 import structures.PilaGenerica;
 import structures.TablasHash;
@@ -21,7 +23,7 @@ public class Main {
             System.out.print("Opcion: ");
 
             int opcion = sc.nextInt();
-            sc.nextLine(); 
+            sc.nextLine();
 
             switch (opcion) {
                 case 1:
@@ -60,12 +62,44 @@ public class Main {
 
     /**
      * Verifica si la expresion esta balanceada usando PilaGenerica
+     *
      * @param s expresion a verificar
      * @return true si esta balanceada, false si no
      */
     public boolean verificarBalanceo(String s) {
-        // TODO: completar 
-        return false;
+
+        String[] partes = s.trim().split("");
+
+        PilaGenerica<String> pila = new PilaGenerica<>(partes.length);
+
+        for (int i = 0; i < pila.getSize(); i++) {
+            String current = partes[i];
+            if (current.equals("(")|| current.equals("{") || current.equals("[")){
+                pila.Push(current);
+            } else if (current.equals(")") || current.equals("}") || current.equals("]")){
+                if (pila.isEmpty()){
+                    return false;
+                }
+                switch (pila.Pop()){
+                    case "(":
+                        if (!current.equals(")")){
+                            return false;
+                        }
+                        break;
+                    case "{":
+                        if (!current.equals("}")){
+                            return false;
+                        }
+                        break;
+                    case "[":
+                        if (!current.equals("]")){
+                            return false;
+                        }
+                        break;
+                }
+            }
+        }
+        return pila.isEmpty();
     }
 
     /**
@@ -73,8 +107,32 @@ public class Main {
      * @param numeros arreglo de numeros enteros
      * @param objetivo suma objetivo
      */
-    public void encontrarParesConSuma(int[] numeros, int objetivo) {
-        // TODO: completar
+    public void encontrarParesConSuma(int[] numeros, int objetivo) throws Exception {
+
+        String msj = "";
+        TablasHash tabla = new TablasHash(objetivo);
+
+        for (int i = 0; i < numeros.length; i++) {
+            if (!tabla.search(numeros[i], numeros[i])){
+                tabla.insert(numeros[i], numeros[i]);
+            }
+        }
+
+        for (int i = 0; i < numeros.length; i++) {
+            int complemento = objetivo - numeros[i];
+            if (tabla.search(complemento, complemento)){
+
+                //el comparador (numeros[i] < complemento) ayuda para que la dupla solo se añada en una dirección:
+                // como solo en alguno de los dos casos se cumple esta regla (ya sabemos que el numero y su complemento
+                // no son iguales) solo se añade una versión de la tupla. (por ejemplo, teniendo objetivo 10 se añade
+                // la dupla 2 y 8 pero no la de 8 y 2).
+
+                if (numeros[i] < complemento){
+                    msj+="("+numeros[i]+", "+complemento+") ";
+                }
+            }
+        }
+        System.out.println(msj);
     }
 
     public static void main(String[] args) throws Exception {

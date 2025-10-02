@@ -8,18 +8,22 @@ import java.lang.NullPointerException;
 public class TablasHash {
   private LinkedList<Integer> tabla[];
   private int size;
-  
-  public int getSize() {
-    return size;
-  }
 
   public void setSize(int size) {
     this.size = size;
   }
 
-  public TablasHash(int n) throws Exception{
-    this.tabla = new LinkedList[n];
-    this.size = n;
+  public TablasHash(int size) throws Exception{
+    this.size = size;
+    this.tabla = new LinkedList[size];
+  }
+
+  public LinkedList<Integer>[] getTabla() {
+    return tabla;
+  }
+
+  public int getSize() {
+    return size;
   }
 
 
@@ -67,8 +71,7 @@ public class TablasHash {
   }
 
   private int hashFunction(int k) throws Exception{
-    
-    return k % this.size;
+    return Math.abs(k % this.size);
 
   }
 }
